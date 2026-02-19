@@ -1,5 +1,0 @@
-[build]
-  functions = "netifly/functions"
-
-[functions]
-  node_bundler = "esbuild"
