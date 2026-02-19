@@ -4,8 +4,8 @@ const countryInput = document.getElementById('country');
 
 // קביעת כתובת ה-API באופן אוטומטי בהתאם לסביבת ההרצה
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                ? '' 
-                : `/.netifly/functions/api`;
+                ? 'http://localhost:3000' 
+                : 'https://countries-counter-project.onrender.com';
 
 console.log("Version 2.0 - Current API URL:", API_URL);
 
@@ -30,7 +30,6 @@ async function isValidCountry(code) {
 // פונקציה לשליפת הנתונים מהשרת/פונקציית הענן
 async function fetchStats() {
     try {
-        // שימוש ב-Backticks (`) כדי לאפשר הזרקת משתנים למחרוזת
         const res = await fetch(`${API_URL}/stats`);
         const data = await res.json();
         
@@ -58,7 +57,6 @@ addVisitBtn.addEventListener('click', async () => {
     }
 
     try {
-        // שליחת בקשת POST להוספת הביקור ב-Redis
         await fetch(`${API_URL}/stats/${code}`, { method: 'POST' });
         countryInput.value = '';
         fetchStats();
