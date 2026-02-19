@@ -5,26 +5,56 @@
 <title>Website Visits by Country</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; color: #333; }
-h1 { color: #2c3e50; }
-input { padding: 10px; font-size: 16px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; }
-button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #3498db; color: white; border: none; border-radius: 5px; }
-button:hover { background: #2980b9; }
-#stats { margin-top: 20px; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); white-space: pre-wrap; }
-canvas { margin-top: 20px; background: white; border-radius: 5px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background: #f5f7fa;
+}
+h1 {
+    color: #2c3e50;
+}
+input {
+    padding: 10px;
+    font-size: 16px;
+    width: 260px;
+}
+button {
+    padding: 10px 18px;
+    font-size: 16px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background: #2980b9;
+}
+pre {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+}
+canvas {
+    margin-top: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+}
 </style>
 </head>
+
 <body>
 <h1>Website Visits by Country</h1>
 
-<input type="text" id="country" placeholder="Enter 2-letter country code (e.g. us, il)" maxlength="2">
+<input id="country" placeholder="2-letter country code (e.g. us, il)" maxlength="2">
 <button id="addVisit">Add Visit</button>
 
-<h2>Statistics (JSON):</h2>
+<h2>Statistics (JSON)</h2>
 <pre id="stats"></pre>
 
-<h2>Graph:</h2>
-<canvas id="statsChart" width="400" height="200"></canvas>
+<h2>Graph</h2>
+<canvas id="chart"></canvas>
 
 <script src="script.js"></script>
 </body>

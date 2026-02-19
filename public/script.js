@@ -1,65 +1,62 @@
-// אלמנטים מה-HTML
+const countryInput = document.getElementById('country');
 const addVisitBtn = document.getElementById('addVisit');
 const statsEl = document.getElementById('stats');
-const countryInput = document.getElementById('country');
 
-// הגדרת Chart.js
-const ctx = document.getElementById('statsChart').getContext('2d');
-let chart = new Chart(ctx, {
+const ctx = document.getElementById('chart').getContext('2d');
+const chart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: [], // שמות המדינות
+        labels: [],
         datasets: [{
             label: 'Visits per Country',
-            data: [], // מספר ביקורים
-            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+            data: [],
+            backgroundColor: 'rgba(52, 152, 219, 0.7)'
         }]
     },
     options: {
         responsive: true,
-        plugins: {
-            legend: { display: false },
-        },
-        scales: {
-            y: { beginAtZero: true }
-        }
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { display: false } }
     }
 });
 
-// פונקציה למשיכת סטטיסטיקות מהשרת
-async function fetchStats() {
+async function isValidCountry(code) {
     try {
-        const res = await fetch('/stats');
-        const data = await res.json();
-
-        // עדכון JSON בדף
-        statsEl.textContent = JSON.stringify(data, null, 2);
-
-        // עדכון הגרף
-        chart.data.labels = Object.keys(data);
-        chart.data.datasets[0].data = Object.values(data);
-        chart.update();
-    } catch (err) {
-        console.error('Error fetching stats:', err);
+        const res = await fetch(`https://restcountries.com/v3.1/alpha/${code}`);
+        return res.ok;
+    } catch {
+        return false;
     }
 }
 
-// לחיצה על הכפתור להוספת ביקור
-addVisitBtn.addEventListener('click', async () => {
-    const country = countryInput.value.trim().toLowerCase();
-    if (!country) return alert('Enter a valid 2-letter country code');
+async function fetchStats() {
+    const res = await fetch('/stats');
+    const data = await res.json();
 
-    try {
-        await fetch(`/stats/${country}`, { method: 'POST' });
-        countryInput.value = '';
-        fetchStats();
-    } catch (err) {
-        console.error('Error adding visit:', err);
+    statsEl.textContent = JSON.stringify(data, null, 2);
+    chart.data.labels = Object.keys(data);
+    chart.data.datasets[0].data = Object.values(data);
+    chart.update();
+}
+
+addVisitBtn.addEventListener('click', async () => {
+    const code = countryInput.value.trim().toLowerCase();
+
+    if (code.length !== 2) {
+        alert('Country code must be 2 letters');
+        return;
     }
+
+    const valid = await isValidCountry(code);
+    if (!valid) {
+        alert('Invalid country code');
+        return;
+    }
+
+    await fetch(`/stats/${code}`, { method: 'POST' });
+    countryInput.value = '';
+    fetchStats();
 });
 
-// טעינת סטטיסטיקות בהתחלה
 fetchStats();
-
-// עדכון אוטומטי כל 5 שניות
 setInterval(fetchStats, 5000);
